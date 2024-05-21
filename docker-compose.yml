@@ -1,0 +1,27 @@
+version: '3'
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile  # Path to your Dockerfile
+        container_name: simulator-app
+        volumes:
+            - ./app:/var/www/app
+        networks:
+            - app-network
+
+    web:
+        image: nginx:alpine
+        container_name: nginx-server
+        ports:
+            - "8080:80"
+        volumes:
+            - ./app:/var/www/app
+            - ./nginx-config:/etc/nginx/conf.d
+        depends_on:
+            - app
+        networks:
+            - app-network
+
+networks:
+    app-network:
